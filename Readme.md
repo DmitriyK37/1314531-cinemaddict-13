@@ -1,7 +1,7 @@
 # Проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Казаков](https://up.htmlacademy.ru/ecmascript/13/user/1314531).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Казаков](https://up.htmlacademy.ru/ecmascript/13/user/1314531).
 
 ---
 
