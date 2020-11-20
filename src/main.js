@@ -51,8 +51,8 @@ for (let i = 0; i < MOST_COMMENTED_CARD; i++) {
 }
 
 const footer = document.querySelector(`.footer`);
-const footerStats = document.querySelector(`.footer__statistics`);
-render(footerStats, createQuantityFilm());
+const footerStatistic = document.querySelector(`.footer__statistics`);
+render(footerStatistic, createQuantityFilm());
 
 render(footer, createPopup(), `afterend`);
 
