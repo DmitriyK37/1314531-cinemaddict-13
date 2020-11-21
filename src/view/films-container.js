@@ -1,4 +1,3 @@
-export const createFilmsListContainer = () => {
-  return `<div class="films-list__container">
-  </div>`;
-};
+export const createFilmsListContainer = () => (
+  `<div class="films-list__container"></div>`
+);
