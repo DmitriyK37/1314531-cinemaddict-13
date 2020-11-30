@@ -4,6 +4,7 @@ import {genres} from "../const.js";
 import {posters} from "../const.js";
 import {titles} from "../const.js";
 import {age} from "../const.js";
+import {commentsBox} from "../const.js";
 import dayjs from "dayjs";
 
 const generateTitle = () => {
@@ -13,9 +14,7 @@ const generateTitle = () => {
 };
 
 const generateGenre = () => {
-  const randomIndex = getRandomInteger(0, genres.length - 1);
-
-  return genres[randomIndex];
+  return genres.slice(getRandomInteger(1, genres.length - 1));
 };
 
 const generatePoster = () => {
@@ -34,6 +33,14 @@ const generateAge = () => {
   return age[randomIndex];
 };
 
+const generateComments = () => {
+  const idComments = Object.keys(commentsBox).sort(() => {
+    return 0.5 - Math.random();
+  });
+  let comments = idComments.slice(getRandomInteger(0, 5));
+  return comments;
+};
+
 export const generateCard = () => {
   return {
     title: generateTitle(),
@@ -43,7 +50,7 @@ export const generateCard = () => {
     genre: generateGenre(),
     poster: generatePoster(),
     description: generateDescription(),
-    comments: getRandomInteger(0, 5),
+    comments: generateComments(),
     age: generateAge(),
     toWatch: Boolean(getRandomInteger(0, 1)),
     hasWatched: Boolean(getRandomInteger(0, 1)),

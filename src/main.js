@@ -63,22 +63,29 @@ if (cards.length > CARD_STEP) {
 render(filmsBlock, createTopRatedFilmsTemplate());
 const topRateFilmsBlock = filmsBlock.querySelector(`.films-list--top-rate`);
 const topRateElementContainer = topRateFilmsBlock.querySelector(`.films-list__container`);
+const topRateBox = (cards.sort((a, b) => {
+  return b.rating - a.rating;
+}));
+const topRateCard = topRateBox.slice(0, 2);
 for (let i = 0; i < TOP_RATED_CARD; i++) {
-  render(topRateElementContainer, createFilmCardTemplate(cards[i]));
+  render(topRateElementContainer, createFilmCardTemplate(topRateCard[i]));
 }
 
 render(filmsBlock, createMostCommentedFilmsTemplate());
 const mostCommentedFilmsContainer = filmsBlock.querySelector(`.films-list--most-commented`);
 const mostCommentedFilmsList = mostCommentedFilmsContainer.querySelector(`.films-list__container`);
+const mostCommentedBox = (cards.sort((a, b) => {
+  return b.comments.length - a.comments.length;
+}));
+const mostCommentedCard = mostCommentedBox.slice(0, 2);
 for (let i = 0; i < MOST_COMMENTED_CARD; i++) {
-  render(mostCommentedFilmsList, createFilmCardTemplate(cards[i]));
+  render(mostCommentedFilmsList, createFilmCardTemplate(mostCommentedCard[i]));
 }
 
 const footer = document.querySelector(`.footer`);
 const footerStatistic = document.querySelector(`.footer__statistics`);
 render(footerStatistic, createQuantityFilm());
 
-// render(footer, createPopup(cards), `afterend`);
-for (let i = 0; i < CARD; i++) {
+for (let i = 0; i < 1; i++) {
   render(footer, createPopup(cards[i]), `afterend`);
 }

@@ -1,3 +1,5 @@
+import {getRandomInteger} from "./utils";
+
 export const titles = [
   `Made for each other`,
   `Popeye meets sinbad`,
@@ -53,3 +55,49 @@ export const emojiesALL = [
   `sleeping`,
   `smile`
 ];
+
+const commentsday = () => {
+  return Date.now() - getRandomInteger(0, 3000000000);
+};
+
+export const commentsBox = {
+  '1': {
+    text: `Interesting setting and a good cast`,
+    author: `Tom Roy`,
+    emoji: `smile`,
+    id: `1`,
+    day: commentsday()
+  },
+
+  '2': {
+    text: `Booooooooooring`,
+    author: `John Doe`,
+    emoji: `sleeping`,
+    day: commentsday(),
+    id: `2`
+  },
+
+  '3': {
+    text: `Very very old. Meh`,
+    author: `Make Rouze`,
+    emoji: `puke`,
+    day: commentsday(),
+    id: `3`
+  },
+
+  '4': {
+    text: `Almost two hours? Seriously?`,
+    author: `Richard Harris`,
+    emoji: `angry`,
+    day: commentsday(),
+    id: `4`
+  },
+
+  '5': {
+    text: `Best film ever!`,
+    author: `Piter Parker`,
+    emoji: `puke`,
+    day: commentsday(),
+    id: `5`
+  }
+};

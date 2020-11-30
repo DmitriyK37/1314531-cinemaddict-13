@@ -1,75 +1,39 @@
 import dayjs from "dayjs";
 import {emojiesALL} from "../const";
-import {getRandomInteger} from "../utils";
+// import {getRandomInteger} from "../utils";
+import {commentsBox} from "../const.js";
 
 
 const generateGenresTemplate = (genre) => {
-  return genre;
-  //   .map((genres) => {
-  //     return `<span class="film-details__genre">${genres}</span>`;
-  //   })
-  //  .join(``);
+  return `<span class="film-details__genre">${genre.join(`, `)}</span>`;
 };
 
-const renderCommentsDate = () => {
-  const commentsDate = getRandomInteger(0, 7);
-  if (commentsDate <= 7) {
-    return commentsDate;
+const renderCommentsDate = (day) => {
+  const commentsDateDiff = dayjs().diff(day, `day`);
+  if (commentsDateDiff === 0) {
+    return `today`;
+  } else if (commentsDateDiff < 7) {
+    return commentsDateDiff + ` days ago`;
   }
-  return commentsDate;
+  return dayjs(new Date(day)).format(`DD/MM/YYYY`);
 };
-
-const commentsBox = [
-  {
-    text: `Interesting setting and a good cast`,
-    author: `Tom Roy`,
-    emoji: `smile`,
-    day: renderCommentsDate()
-  },
-  {
-    text: `Booooooooooring`,
-    author: `John Doe`,
-    emoji: `sleeping`,
-    day: renderCommentsDate()
-  },
-  {
-    text: `Very very old. Meh`,
-    author: `Make Rouze`,
-    emoji: `puke`,
-    day: renderCommentsDate()
-  },
-  {
-    text: `Almost two hours? Seriously?`,
-    author: `Richard Harris`,
-    emoji: `angry`,
-    day: renderCommentsDate()
-  },
-  {
-    text: `Best film ever!`,
-    author: `Piter Parker`,
-    emoji: `puke`,
-    day: renderCommentsDate()
-  }
-];
 
 const createCommentsTemplate = (commentCount) => {
-  return new Array(commentCount)
-    .fill()
-    .map((_, i) => {
-      return `<li class="film-details__comment">
+  return commentCount.map((id) => {
+    return `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${commentsBox[i].emoji}.png" width="55" height="55" alt="emoji-${commentsBox[i].emoji}">
+          <img src="./images/emoji/${commentsBox[id].emoji}.png" width="55" height="55" alt="emoji-${commentsBox[id].emoji}">
         </span>
         <div>
-          <p class="film-details__comment-text">${commentsBox[i].text}</p>
+          <p class="film-details__comment-text">${commentsBox[id].text}</p>
           <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${commentsBox[i].author}</span>
-            <span class="film-details__comment-day">${commentsBox[i].day}</span>
+            <span class="film-details__comment-author">${commentsBox[id].author}</span>
+            <span class="film-details__comment-day">${renderCommentsDate(commentsBox[id].day)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
       </li>`;
-    })
+  })
     .join(``);
 };
 
@@ -102,7 +66,7 @@ export const createPopup = (card) => {
   const emojies = createEmojiesTemplate(emojiesALL);
   const allComments = createCommentsTemplate(comments);
 
-  return `<section class="film-details">
+  return `<section class="film-details visually-hidden">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
         <div class="film-details__close">
@@ -178,7 +142,7 @@ export const createPopup = (card) => {
 
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments}</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
               ${allComments}
