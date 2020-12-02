@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import {emojiesALL} from "../const";
-// import {getRandomInteger} from "../utils";
-import {commentsBox} from "../const.js";
+import {commentsBox, emojiesALL} from "../const";
+import {createElement} from "../utils.js";
+// import {commentsBox} from "../const.js";
 
 
 const generateGenresTemplate = (genre) => {
@@ -48,7 +48,7 @@ const createEmojiesTemplate = (emojies) => {
     .join(``);
 };
 
-export const createPopup = (card) => {
+const createPopup = (card) => {
   const {
     title,
     rating,
@@ -66,7 +66,7 @@ export const createPopup = (card) => {
   const emojies = createEmojiesTemplate(emojiesALL);
   const allComments = createCommentsTemplate(comments);
 
-  return `<section class="film-details visually-hidden">
+  return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
         <div class="film-details__close">
@@ -164,3 +164,26 @@ export const createPopup = (card) => {
     </form>
   </section>`;
 };
+
+export default class Popup {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopup(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
