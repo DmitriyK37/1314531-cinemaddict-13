@@ -48,7 +48,7 @@ const renderCard = (cardListElement, card) => {
 
   const closePopup = () => {
     body.removeChild(popupComponent.getElement());
-    document.addEventListener(`keydown`, onEscKeyDown);
+    document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
   cardComponent.getElement().querySelector(`.film-card__title, .film-card__comments`).addEventListener(`click`, () => {
@@ -62,7 +62,7 @@ const renderCard = (cardListElement, card) => {
   });
 
   const onEscKeyDown = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.key === `Escape`) {
       evt.preventDefault();
       closePopup();
       document.removeEventListener(`keydown`, onEscKeyDown);
@@ -114,7 +114,7 @@ const topRateBox = (cards.sort((a, b) => {
 }));
 const topRateCard = topRateBox.slice(0, 2);
 for (let i = 0; i < TOP_RATED_CARD; i++) {
-  render(topRateElementContainer, new FilmCard(topRateCard[i]).getElement(), RenderPosition.BEFOREEND);
+  renderCard(topRateElementContainer, topRateCard[i]);
 }
 
 render(filmsBlock, new MostCommentedFilms().getElement(), RenderPosition.BEFOREEND);
@@ -125,7 +125,7 @@ const mostCommentedBox = (cards.sort((a, b) => {
 }));
 const mostCommentedCard = mostCommentedBox.slice(0, 2);
 for (let i = 0; i < MOST_COMMENTED_CARD; i++) {
-  render(mostCommentedFilmsContainer, new FilmCard(mostCommentedCard[i]).getElement(), RenderPosition.BEFOREEND);
+  renderCard(mostCommentedFilmsContainer, mostCommentedCard[i]);
 }
 
 // const footer = document.querySelector(`.footer`);
