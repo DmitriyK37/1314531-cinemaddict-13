@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 import {commentsBox, emojiesALL} from "../const";
 import {createElement} from "../utils.js";
-// import {commentsBox} from "../const.js";
-
 
 const generateGenresTemplate = (genre) => {
   return `<span class="film-details__genre">${genre.join(`, `)}</span>`;
