@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createNoCardTemplate = () => (
   `<section class="films">
@@ -7,24 +7,8 @@ const createNoCardTemplate = () => (
   </section>`
 );
 
-export default class NoCard {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NoCard extends Abstract {
   getTemplate() {
     return createNoCardTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createQuantityFilm = () => (
   `<section class="footer__statistics">
@@ -6,24 +6,8 @@ const createQuantityFilm = () => (
   </section>`
 );
 
-export default class QuantityFilm {
-  constructor() {
-    this._element = null;
-  }
-
+export default class QuantityFilm extends Abstract {
   getTemplate() {
     return createQuantityFilm();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
