@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import {commentsBox, emojiesALL} from "../const";
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const generateGenresTemplate = (genre) => {
   return `<span class="film-details__genre">${genre.join(`, `)}</span>`;
@@ -163,25 +163,23 @@ const createPopup = (card) => {
   </section>`;
 };
 
-export default class Popup {
+export default class Popup extends Abstract {
   constructor(card) {
+    super();
     this._card = card;
-    this._element = null;
+    this._popupClickHandler = this._popupClickHandler.bind(this);
   }
 
   getTemplate() {
     return createPopup(this._card);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _popupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setPopupClickHandler(callback) {
+    this._callback.popupClick = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._popupClickHandler);
   }
 }

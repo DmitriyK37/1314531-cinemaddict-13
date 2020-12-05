@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createFilmCardTemplate = (card) => {
   const {
@@ -40,25 +40,26 @@ const createFilmCardTemplate = (card) => {
   </article>`;
 };
 
-export default class FilmCard {
+export default class FilmCard extends Abstract {
   constructor(card) {
+    super();
     this._card = card;
-    this._element = null;
+    this._cardClickHandler = this._cardClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _cardClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.cardClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setCardClickHandler(callback) {
+    this._callback.cardClick = callback;
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._cardClickHandler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._cardClickHandler);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._cardClickHandler);
   }
 }

@@ -1,4 +1,4 @@
-import {getRandomInteger} from "../utils";
+import {getRandomInteger} from "../utils/common.js";
 import {descriptions} from "../const.js";
 import {genres} from "../const.js";
 import {posters} from "../const.js";

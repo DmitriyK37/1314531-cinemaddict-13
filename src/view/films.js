@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createFilmsBoardTemplate = () => (
   `<section class="films">
@@ -8,24 +8,8 @@ const createFilmsBoardTemplate = () => (
   </section>`
 );
 
-export default class FilmsBoard {
-  constructor() {
-    this._element = null;
-  }
-
+export default class FilmsBoard extends Abstract {
   getTemplate() {
     return createFilmsBoardTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
