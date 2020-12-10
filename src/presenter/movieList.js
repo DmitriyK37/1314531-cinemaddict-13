@@ -77,10 +77,6 @@ export default class MovieList {
 
   _handleShowMoreButtonClick() {
     this._renderCards(this._renderCardCount, this._renderCardCount + CARD_STEP);
-    // this._cards
-    // .slice(this._renderCardCount, this._renderCardCount + CARD_STEP)
-    // .forEach((card) => this._renderCard(this._filmListElement, card));
-
 
     this._renderCardCount += CARD_STEP;
 
