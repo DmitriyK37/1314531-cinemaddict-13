@@ -111,7 +111,7 @@ export default class MovieList {
     render(this._filmsComponent, this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
     render(this._topRatedFilmsComponent, topRateFilmsConteiner, RenderPosition.BEFOREEND);
     const topRateBox = (this._cards.sort((a, b) => {
-    return b.rating - a.rating;
+      return b.rating - a.rating;
     }));
     const topRateCard = topRateBox.slice(0, 2);
     for (let i = 0; i < TOP_RATED_CARD; i++) {
