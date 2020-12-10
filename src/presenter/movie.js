@@ -76,12 +76,7 @@ export default class Movie {
       replace(this._cardComponent, prevCardComponent);
     }
 
-    // if (this._filmsListComponent.getElement().contains(prevPopupComponent.getElement())) {
-    //   replace(this._popupComponent, prevPopupComponent);
-    // }
-
     remove(prevCardComponent);
-    // remove(prevPopupComponent);
   }
 
   destroy() {

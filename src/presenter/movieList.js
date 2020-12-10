@@ -11,7 +11,7 @@ import Movie from "./movie.js";
 import {updateItem} from "../utils/common.js";
 
 const CARD_STEP = 5;
-// const TOP_RATED_CARD = 2;
+const TOP_RATED_CARD = 2;
 const MOST_COMMENTED_CARD = 2;
 
 export default class MovieList {
@@ -106,7 +106,17 @@ export default class MovieList {
   }
 
   _renderTopRateList() {
+    const topRateFilmsConteiner = new FilmsList();
     render(this._filmsComponent, this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
+    render(this._filmsComponent, this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
+    render(this._topRatedFilmsComponent, topRateFilmsConteiner, RenderPosition.BEFOREEND);
+    const topRateBox = (this._cards.sort((a, b) => {
+    return b.rating - a.rating;
+    }));
+    const topRateCard = topRateBox.slice(0, 2);
+    for (let i = 0; i < TOP_RATED_CARD; i++) {
+      this._renderCard(topRateFilmsConteiner, topRateCard[i], RenderPosition.BEFOREEND);
+    }
   }
 
   _renderMostCommentedList() {
