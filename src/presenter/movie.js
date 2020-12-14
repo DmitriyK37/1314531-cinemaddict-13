@@ -78,8 +78,8 @@ export default class Movie {
   }
 
   destroy() {
-    remove(this._taskComponent);
-    remove(this._taskEditComponent);
+    remove(this._cardComponent);
+    // remove(this._cardEditComponent);
   }
 
   resetView() {

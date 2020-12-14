@@ -6,9 +6,11 @@ import TopRatedFilms from "../view/top-rate.js";
 import MostCommentedFilms from "../view/most-commented.js";
 import ShowMoreButton from "../view/show-more.js";
 import NoCards from "../view/no-cards.js";
-import {render, RenderPosition} from "../utils/render.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 import Movie from "./movie.js";
 import {updateItem} from "../utils/common.js";
+import {sortCardDate, sortCardRate} from "../utils/common.js";
+import {SortType} from "../const.js";
 
 const CARD_STEP = 5;
 const TOP_RATED_CARD = 2;
@@ -21,6 +23,7 @@ export default class MovieList {
     this._cardPresenter = {};
     this._mostCommentedCardPresenter = {};
     this._topRateCardPresenter = {};
+    this._currentSortType = SortType.DEFAULT;
 
     this._filmsComponent = new Films();
     this._sortComponent = new Sort();
@@ -32,12 +35,14 @@ export default class MovieList {
     this._mostCommentedFilmsComponent = new MostCommentedFilms();
 
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleCardChange = this._handleCardChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(cards) {
     this._cards = cards.slice();
+    this._sourcedMovieList = cards.slice();
 
     render(this._filmListElement, this._filmsComponent, RenderPosition.BEFOREEND);
     render(this._filmsComponent, this._filmBoardComponent, RenderPosition.BEFOREEND);
@@ -63,8 +68,34 @@ export default class MovieList {
     }
   }
 
+  _sortTasks(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this._cards.sort(sortCardDate);
+        break;
+      case SortType.RATING:
+        this._cards.sort(sortCardRate);
+        break;
+      default:
+        this._cards = this._sourcedMovieList.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortTasks(sortType);
+    this._clearCardList();
+    this._renderCards();
+  }
+
   _renderSort() {
     render(this._filmsComponent, this._sortComponent, RenderPosition.AFTERBEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderCard(container, card, presentersMap) {
@@ -101,6 +132,15 @@ export default class MovieList {
   _renderShowMoreButton() {
     render(this._filmBoardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
     this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
+  }
+
+  _clearCardList() {
+    Object
+      .values(this._cardPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._cardPresenter = {};
+    this._renderCardCount = CARD_STEP;
+    remove(this._showMoreButtonComponent);
   }
 
   _renderCardList() {
