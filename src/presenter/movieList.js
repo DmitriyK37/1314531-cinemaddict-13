@@ -19,6 +19,8 @@ export default class MovieList {
     this._filmListElement = filmListElement;
     this._renderCardCount = CARD_STEP;
     this._cardPresenter = {};
+    this._mostCommentedCardPresenter = {};
+    this._topRateCardPresenter = {};
 
     this._filmsComponent = new Films();
     this._sortComponent = new Sort();
@@ -53,16 +55,26 @@ export default class MovieList {
   _handleCardChange(updatedCard) {
     this._cards = updateItem(this._cards, updatedCard);
     this._cardPresenter[updatedCard.id].init(updatedCard);
+    if (this._mostCommentedCardPresenter[updatedCard.id]) {
+      this._mostCommentedCardPresenter[updatedCard.id].init(updatedCard);
+    }
+    if (this._topRateCardPresenter[updatedCard.id]) {
+      this._topRateCardPresenter[updatedCard.id].init(updatedCard);
+    }
   }
 
   _renderSort() {
     render(this._filmsComponent, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
-  _renderCard(container, card) {
+  _renderCard(container, card, presentersMap) {
     const cardPresenter = new Movie(container, this._handleCardChange, this._handleModeChange);
     cardPresenter.init(card);
-    this._cardPresenter[card.id] = cardPresenter;
+    if (presentersMap) {
+      presentersMap[card.id] = cardPresenter;
+    } else {
+      this._cardPresenter[card.id] = cardPresenter;
+    }
   }
 
   _renderCards(from, to) {
@@ -106,12 +118,12 @@ export default class MovieList {
     render(this._filmsComponent, this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
     render(this._filmsComponent, this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
     render(this._topRatedFilmsComponent, topRateFilmsConteiner, RenderPosition.BEFOREEND);
-    const topRateBox = (this._cards.sort((a, b) => {
-      return b.rating - a.rating;
+    const topRateBox = (this._cards.slice().sort((a, b) => {
+      return (+b.rating) - (+a.rating);
     }));
     const topRateCard = topRateBox.slice(0, 2);
     for (let i = 0; i < TOP_RATED_CARD; i++) {
-      this._renderCard(topRateFilmsConteiner, topRateCard[i], RenderPosition.BEFOREEND);
+      this._renderCard(topRateFilmsConteiner, topRateCard[i], this._topRateCardPresenter);
     }
   }
 
@@ -119,12 +131,12 @@ export default class MovieList {
     const mostComentedFilmsConteiner = new FilmsList();
     render(this._filmsComponent, this._mostCommentedFilmsComponent, RenderPosition.BEFOREEND);
     render(this._mostCommentedFilmsComponent, mostComentedFilmsConteiner, RenderPosition.BEFOREEND);
-    const mostCommentedBox = (this._cards.sort((a, b) => {
+    const mostCommentedBox = (this._cards.slice().sort((a, b) => {
       return b.comments.length - a.comments.length;
     }));
     const mostCommentedCard = mostCommentedBox.slice(0, 2);
     for (let i = 0; i < MOST_COMMENTED_CARD; i++) {
-      this._renderCard(mostComentedFilmsConteiner, mostCommentedCard[i], RenderPosition.BEFOREEND);
+      this._renderCard(mostComentedFilmsConteiner, mostCommentedCard[i], this._mostCommentedCardPresenter);
     }
   }
 

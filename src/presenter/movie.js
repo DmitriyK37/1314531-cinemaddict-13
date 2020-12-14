@@ -18,9 +18,7 @@ export default class Movie {
 
   init(card) {
     this._card = card;
-
     const prevCardComponent = this._cardComponent;
-
     const body = document.querySelector(`body`);
     this._cardComponent = new FilmCard(card);
 

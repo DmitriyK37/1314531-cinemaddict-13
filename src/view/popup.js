@@ -188,18 +188,15 @@ export default class Popup extends Abstract {
     this._callback.popupClick();
   }
 
-  _watchlistClickHandler(evt) {
-    evt.preventDefault();
+  _watchlistClickHandler() {
     this._callback.watchlistClick();
   }
 
-  _watchedClickHandler(evt) {
-    evt.preventDefault();
+  _watchedClickHandler() {
     this._callback.watchedClick();
   }
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
+  _favoriteClickHandler() {
     this._callback.favoriteClick();
   }
 
