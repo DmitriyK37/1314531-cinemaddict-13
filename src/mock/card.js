@@ -7,6 +7,8 @@ import {age} from "../const.js";
 import {commentsBox} from "../const.js";
 import dayjs from "dayjs";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateTitle = () => {
   const randomIndex = getRandomInteger(0, titles.length - 1);
 
@@ -43,6 +45,7 @@ const generateComments = () => {
 
 export const generateCard = () => {
   return {
+    id: generateId(),
     title: generateTitle(),
     rating: (getRandomInteger(1, 9)) + `.` + (getRandomInteger(0, 9)),
     year: getRandomInteger(dayjs(`12.11.1886`, new Date())),

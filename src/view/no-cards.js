@@ -7,7 +7,7 @@ const createNoCardTemplate = () => (
   </section>`
 );
 
-export default class NoCard extends Abstract {
+export default class NoCards extends Abstract {
   getTemplate() {
     return createNoCardTemplate();
   }
