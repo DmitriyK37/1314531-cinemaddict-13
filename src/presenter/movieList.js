@@ -90,7 +90,7 @@ export default class MovieList {
 
     this._sortTasks(sortType);
     this._clearCardList();
-    this._renderCards();
+    this._renderCardList();
   }
 
   _renderSort() {
@@ -120,7 +120,6 @@ export default class MovieList {
 
   _handleShowMoreButtonClick() {
     this._renderCards(this._renderCardCount, this._renderCardCount + CARD_STEP);
-
     this._renderCardCount += CARD_STEP;
 
     if (this._renderCardCount >= this._cards.length) {
