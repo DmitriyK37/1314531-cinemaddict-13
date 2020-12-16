@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import {commentsBox, emojiesALL} from "../const";
-// import Abstract from "./abstract.js";
 import Smart from "./smart";
 
 const generateGenresTemplate = (genre) => {
@@ -37,9 +36,11 @@ const createCommentsTemplate = (commentCount) => {
 };
 
 const createEmojiesTemplate = (emojies) => {
+  const emojiChecked = emojies ? `` : `checked="checked"`;
+  console.log(emojies);
   return emojies
     .map((emoji) => {
-      return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+      return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${emojiChecked}>
         <label class="film-details__emoji-label" for="emoji-${emoji}">
           <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
         </label>`;
@@ -224,7 +225,11 @@ export default class Popup extends Smart {
     evt.preventDefault();
     this.updateData({
       emojies: evt.target.value
-    });
+    },
+    this._watchedClickHandler,
+    this._watchlistClickHandler,
+    this._favoriteClickHandler
+    );
     const emojiName = evt.target.value;
     const newComment = this.getElement().querySelector(`.film-details__new-comment`);
     newComment.firstElementChild.innerHTML = (
