@@ -37,7 +37,6 @@ const createCommentsTemplate = (commentCount) => {
 
 const createEmojiesTemplate = (emojies) => {
   const emojiChecked = emojies ? `` : `checked="checked"`;
-  console.log(emojies);
   return emojies
     .map((emoji) => {
       return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${emojiChecked}>
