@@ -101,3 +101,9 @@ export const commentsBox = {
     id: `5`
   }
 };
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};
