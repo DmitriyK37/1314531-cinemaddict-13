@@ -35,11 +35,10 @@ const createCommentsTemplate = (commentCount) => {
     .join(``);
 };
 
-const createEmojiesTemplate = (emojies) => {
-  const emojiChecked = emojies ? `` : `checked="checked"`;
+const createEmojiesTemplate = (emojies, activeEmoji) => {
   return emojies
     .map((emoji) => {
-      return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${emojiChecked}>
+      return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${emoji === activeEmoji ? `checked="checked"` : ``}>
         <label class="film-details__emoji-label" for="emoji-${emoji}">
           <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
         </label>`;
@@ -61,11 +60,13 @@ const createPopup = (card) => {
     toWatch,
     hasWatched,
     isFavorites,
+    emojies
   } = card;
 
   const actualGenres = generateGenresTemplate(genre);
   const date = dayjs(year).format(`D MMMM YYYY`);
-  const emojies = createEmojiesTemplate(emojiesALL);
+  const emojiesListTemplate = createEmojiesTemplate(emojiesALL, emojies);
+
   const allComments = createCommentsTemplate(comments);
 
   const toWatchPopup = toWatch ? `checked="checked"` : ``;
@@ -164,7 +165,7 @@ const createPopup = (card) => {
             </label>
 
             <div class="film-details__emoji-list">
-              ${emojies}
+              ${emojiesListTemplate}
             </div>
           </div>
         </section>
