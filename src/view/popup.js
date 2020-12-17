@@ -155,7 +155,9 @@ const createPopup = (card) => {
           </ul>
 
           <div class="film-details__new-comment">
-            <div class="film-details__add-emoji-label"></div>
+            <div class="film-details__add-emoji-label">
+            ${card.emojies ? `<img data-emojies="${card.emojies}" src="images/emoji/${card.emojies}.png" width="55" height="55" alt="emoji-${card.emojies}">` : ``}
+            </div>
 
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -210,33 +212,33 @@ export default class Popup extends Smart {
 
   _watchlistClickHandler() {
     this._callback.watchlistClick();
+    this.updateData({
+      toWatch: !this._data.toWatch
+    }, true
+    );
   }
 
   _watchedClickHandler() {
     this._callback.watchedClick();
+    this.updateData({
+      hasWatched: !this._data.hasWatched
+    }, true
+    );
   }
 
   _favoriteClickHandler() {
     this._callback.favoriteClick();
+    this.updateData({
+      isFavorites: !this._data.isFavorites
+    }, true
+    );
   }
 
   _emojiChangeHandler(evt) {
     evt.preventDefault();
     this.updateData({
       emojies: evt.target.value
-    },
-    this._watchedClickHandler,
-    this._watchlistClickHandler,
-    this._favoriteClickHandler
-    );
-    const emojiName = evt.target.value;
-    const newComment = this.getElement().querySelector(`.film-details__new-comment`);
-    newComment.firstElementChild.innerHTML = (
-      `<img
-        data-emoji="${emojiName}"
-        src="./images/emoji/${emojiName}.png"
-        width="55" height="55"
-      >`
+    }
     );
   }
 
