@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import {commentsBox, emojiesALL} from "../const";
-import Abstract from "./abstract.js";
+import Smart from "./smart";
 
 const generateGenresTemplate = (genre) => {
   return `<span class="film-details__genre">${genre.join(`, `)}</span>`;
@@ -35,10 +35,10 @@ const createCommentsTemplate = (commentCount) => {
     .join(``);
 };
 
-const createEmojiesTemplate = (emojies) => {
+const createEmojiesTemplate = (emojies, activeEmoji) => {
   return emojies
     .map((emoji) => {
-      return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+      return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${emoji === activeEmoji ? `checked="checked"` : ``}>
         <label class="film-details__emoji-label" for="emoji-${emoji}">
           <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
         </label>`;
@@ -59,12 +59,14 @@ const createPopup = (card) => {
     age,
     toWatch,
     hasWatched,
-    isFavorites
+    isFavorites,
+    emojies
   } = card;
 
   const actualGenres = generateGenresTemplate(genre);
   const date = dayjs(year).format(`D MMMM YYYY`);
-  const emojies = createEmojiesTemplate(emojiesALL);
+  const emojiesListTemplate = createEmojiesTemplate(emojiesALL, emojies);
+
   const allComments = createCommentsTemplate(comments);
 
   const toWatchPopup = toWatch ? `checked="checked"` : ``;
@@ -154,14 +156,16 @@ const createPopup = (card) => {
           </ul>
 
           <div class="film-details__new-comment">
-            <div class="film-details__add-emoji-label"></div>
+            <div class="film-details__add-emoji-label">
+            ${card.emojies ? `<img data-emojies="${card.emojies}" src="images/emoji/${card.emojies}.png" width="55" height="55" alt="emoji-${card.emojies}">` : ``}
+            </div>
 
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
             </label>
 
             <div class="film-details__emoji-list">
-              ${emojies}
+              ${emojiesListTemplate}
             </div>
           </div>
         </section>
@@ -170,19 +174,38 @@ const createPopup = (card) => {
   </section>`;
 };
 
-export default class Popup extends Abstract {
+export default class Popup extends Smart {
   constructor(card) {
     super();
     this._card = card;
+    this._data = Popup.parseCardToData(card);
+
     this._popupClickHandler = this._popupClickHandler.bind(this);
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._setInnerHandlers();
   }
 
   getTemplate() {
-    return createPopup(this._card);
+    return createPopup(this._data);
   }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setPopupClickHandler(this._callback.popupClick);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.film-details__emoji-list`)
+      .addEventListener(`change`, this._emojiChangeHandler);
+  }
+
   _popupClickHandler(evt) {
     evt.preventDefault();
     this._callback.popupClick();
@@ -190,14 +213,34 @@ export default class Popup extends Abstract {
 
   _watchlistClickHandler() {
     this._callback.watchlistClick();
+    this.updateData({
+      toWatch: !this._data.toWatch
+    }, true
+    );
   }
 
   _watchedClickHandler() {
     this._callback.watchedClick();
+    this.updateData({
+      hasWatched: !this._data.hasWatched
+    }, true
+    );
   }
 
   _favoriteClickHandler() {
     this._callback.favoriteClick();
+    this.updateData({
+      isFavorites: !this._data.isFavorites
+    }, true
+    );
+  }
+
+  _emojiChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      emojies: evt.target.value
+    }
+    );
   }
 
   setPopupClickHandler(callback) {
@@ -218,5 +261,27 @@ export default class Popup extends Abstract {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  static parseCardToData(card) {
+    return Object.assign(
+        {},
+        card,
+        {
+          toWatch: card.toWatch,
+          hasWatched: card.hasWatched,
+          isFavorites: card.isFavorites,
+        }
+    );
+  }
+
+  static parseDataToCard(data) {
+    data = Object.assign({}, data);
+
+    delete data.toWatch;
+    delete data.hasWatched;
+    delete data.isFavorites;
+
+    return data;
   }
 }

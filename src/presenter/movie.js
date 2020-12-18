@@ -79,7 +79,6 @@ export default class Movie {
 
   destroy() {
     remove(this._cardComponent);
-    // remove(this._cardEditComponent);
   }
 
   resetView() {
