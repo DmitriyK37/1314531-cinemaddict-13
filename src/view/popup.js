@@ -117,7 +117,7 @@ const createPopup = (card) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${duration}</td>
+                <td class="film-details__cell">${Math.trunc(duration / 60)}h ${duration % 60}m</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>

@@ -15,6 +15,12 @@ const generateTitle = () => {
   return titles[randomIndex];
 };
 
+// const generateDuration = (asMinutes = getRandomInteger(80, 150)) => {
+//   // const minutes = dayjs(asMinutes, `minutes`).minutes();
+//   // return dayjs({minute: minutes}).format(`mm[m]`);
+//   return dayjs().minute(asMinutes).format(`mm[m]`);
+// };
+
 const generateGenre = () => {
   return genres.slice(getRandomInteger(1, genres.length - 1));
 };
@@ -49,7 +55,7 @@ export const generateCard = () => {
     title: generateTitle(),
     rating: (getRandomInteger(1, 9)) + `.` + (getRandomInteger(0, 9)),
     year: getRandomInteger(dayjs(`12.11.1886`, new Date())),
-    duration: (getRandomInteger(0, 2)) + `h ` + (getRandomInteger(0, 59)) + `m`,
+    duration: getRandomInteger(30, 180),
     genre: generateGenre(),
     poster: generatePoster(),
     description: generateDescription(),
