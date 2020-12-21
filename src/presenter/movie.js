@@ -1,6 +1,7 @@
 import FilmCard from "../view/film-card.js";
 import Popup from "../view/popup.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
+import {UserAction, UpdateType} from "../const.js";
 
 export default class Movie {
   constructor(filmsListComponent, changeData, changeMode) {
@@ -14,6 +15,7 @@ export default class Movie {
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._deleteCommentClick = this._deleteCommentClick.bind(this);
   }
 
   init(card) {
@@ -36,6 +38,7 @@ export default class Movie {
       this._popupComponent.setWatchlistClickHandler(this._handleWatchlistClick);
       this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
       this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+      this._popupComponent.setDeletCommentClickHandler(this._deleteCommentClick);
 
       this._popupComponent.setPopupClickHandler(() => {
         this.closePopup();
@@ -87,6 +90,8 @@ export default class Movie {
 
   _handleWatchlistClick() {
     this._changeData(
+        UserAction.UPDATE_CARD,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._card,
@@ -99,6 +104,8 @@ export default class Movie {
 
   _handleWatchedClick() {
     this._changeData(
+        UserAction.UPDATE_CARD,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._card,
@@ -111,11 +118,27 @@ export default class Movie {
 
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_CARD,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._card,
             {
               isFavorites: !this._card.isFavorites
+            }
+        )
+    );
+  }
+
+  _deleteCommentClick(newComments) {
+    this._changeData(
+        UserAction.UPDATE_CARD,
+        UpdateType.MINOR,
+        Object.assign(
+            {},
+            this._card,
+            {
+              comments: newComments
             }
         )
     );
