@@ -4,11 +4,11 @@ import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
 export default class Movie {
-  constructor(filmsListComponent, changeData, changeMode) {
+  constructor(filmsListComponent, changeData, changeMode, api) {
     this._filmsListComponent = filmsListComponent;
     this._changeData = changeData;
     this._changeMode = changeMode;
-
+    this._api = api;
     this._cardComponent = null;
     this._popupComponent = null;
 
@@ -32,6 +32,9 @@ export default class Movie {
     const openPopup = () => {
       this._changeMode();
       this._popupComponent = new Popup(card);
+      this._api.getComments(card).then((comments) => {
+        this._popupComponent.setComments(comments);
+      });
       body.appendChild(this._popupComponent.getElement());
       document.addEventListener(`keydown`, onEscKeyDown);
 

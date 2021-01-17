@@ -13,7 +13,7 @@ const createFilmCardTemplate = (card) => {
     comments,
     toWatch,
     hasWatched,
-    isFavorites
+    isFavorites,
   } = card;
 
   const date = dayjs(year).format(`YYYY`);
@@ -29,7 +29,7 @@ const createFilmCardTemplate = (card) => {
       <span class="film-card__duration">${Math.trunc(duration / 60)}h ${duration % 60}m</span>
       <span class="film-card__genre">${genre[0]}</span>
     </p>
-    <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+    <img src="./${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>
     <a class="film-card__comments">${comments.length} comments</a>
     <div class="film-card__controls">

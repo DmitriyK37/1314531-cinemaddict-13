@@ -20,17 +20,17 @@ const renderCommentsDate = (day) => {
 };
 
 const createCommentsTemplate = (comments) => {
-  return comments.map((id) => {
+  return comments.map((comment) => {
     return `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${commentsBox[id].emoji}.png" width="55" height="55" alt="emoji-${commentsBox[id].emoji}">
+          <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">
         </span>
         <div>
-          <p class="film-details__comment-text">${he.encode(commentsBox[id].text)}</p>
+          <p class="film-details__comment-text">${he.encode(comment.comment)}</p>
           <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${commentsBox[id].author}</span>
-            <span class="film-details__comment-day">${renderCommentsDate(commentsBox[id].day)}</span>
-            <button class="film-details__comment-delete" data-id=${id}>Delete</button>
+            <span class="film-details__comment-author">${comment.author}</span>
+            <span class="film-details__comment-day">${renderCommentsDate(comment.date)}</span>
+            <button class="film-details__comment-delete" data-id=${comment.id}>Delete</button>
           </p>
         </div>
       </li>`;
@@ -49,7 +49,7 @@ const createEmojiesTemplate = (emojies, activeEmoji) => {
     .join(``);
 };
 
-const createPopup = (card) => {
+const createPopup = (card, comments) => {
   const {
     title,
     rating,
@@ -58,7 +58,6 @@ const createPopup = (card) => {
     poster,
     genre,
     description,
-    comments,
     age,
     toWatch,
     hasWatched,
@@ -84,7 +83,7 @@ const createPopup = (card) => {
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+            <img class="film-details__poster-img" src="./${poster}" alt="">
 
             <p class="film-details__age">${age}</p>
           </div>
@@ -182,7 +181,9 @@ export default class Popup extends Smart {
     super();
     this._card = card;
     this._data = Popup.parseCardToData(card);
+    this._comments = [];
 
+    this.setComments = this.setComments.bind(this);
     this._popupClickHandler = this._popupClickHandler.bind(this);
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -194,7 +195,7 @@ export default class Popup extends Smart {
   }
 
   getTemplate() {
-    return createPopup(this._data);
+    return createPopup(this._data, this._comments);
   }
 
   restoreHandlers() {
@@ -252,7 +253,7 @@ export default class Popup extends Smart {
 
   _deleteCommentClickHandler(evt) {
     evt.preventDefault();
-    const newComments = this._data.comments.filter((commentid) => commentid !== evt.target.dataset.id);
+    const newComments = this._data.comments.filter((commentid) => commentid !== evt.target.dataset.comment.id);
     this._callback.deleteCommentClick(newComments);
     this.updateData({
       comments: newComments
@@ -307,6 +308,11 @@ export default class Popup extends Smart {
     this._callback.deleteCommentClick = callback;
     const buttoms = this.getElement().querySelectorAll(`.film-details__comment-delete`);
     buttoms.forEach((buttom) => buttom.addEventListener(`click`, this._deleteCommentClickHandler));
+  }
+
+  setComments(comments) {
+    this._comments = comments;
+    this.updateElement();
   }
 
   static parseCardToData(card) {

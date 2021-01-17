@@ -11,13 +11,14 @@ import Movie from "./movie.js";
 import {sortCardDate, sortCardRate} from "../utils/common.js";
 import {filter} from "../utils/filter.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
+import Loading from "../view/loading.js";
 
 const CARD_STEP = 5;
 const TOP_RATED_CARD = 2;
 const MOST_COMMENTED_CARD = 2;
 
 export default class MovieList {
-  constructor(filmListElement, cardsModel, filterModel) {
+  constructor(filmListElement, cardsModel, filterModel, api) {
     this._cardsModel = cardsModel;
     this._filterModel = filterModel;
     this._filmListElement = filmListElement;
@@ -26,6 +27,8 @@ export default class MovieList {
     this._mostCommentedCardPresenter = {};
     this._topRateCardPresenter = {};
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
+    this._api = api;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -39,15 +42,13 @@ export default class MovieList {
     this._showMoreButtonComponent = new ShowMoreButton();
     this._topRatedFilmsComponent = new TopRatedFilms();
     this._mostCommentedFilmsComponent = new MostCommentedFilms();
+    this._loadingComponent = new Loading();
 
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-
-    this._cardsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -56,7 +57,22 @@ export default class MovieList {
     render(this._filmsComponent, this._filmBoardComponent, RenderPosition.BEFOREEND);
     render(this._filmBoardComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
 
+    this._cardsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderMovieList();
+  }
+
+  destroy() {
+    this._clearMovieList({resetRenderedCardCount: true, resetSortType: true});
+
+    remove(this._filmsComponent);
+    remove(this._filmBoardComponent);
+    remove(this._topRatedFilmsComponent);
+    remove(this._mostCommentedFilmsComponent);
+
+    this._cardsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getCards() {
@@ -82,7 +98,9 @@ export default class MovieList {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_CARD:
-        this._cardsModel.updateCard(updateType, update);
+        this._api.updateMovies(update).then((response) => {
+          this._cardsModel.updateCard(updateType, response);
+        });
         break;
       case UserAction.ADD_CARD:
         this._cardsModel.addCard(updateType, update);
@@ -120,6 +138,14 @@ export default class MovieList {
         this._renderTopRateList();
         this._renderMostCommentedList();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderMovieList();
+        this._clearExtraBlock();
+        this._renderTopRateList();
+        this._renderMostCommentedList();
+        break;
     }
   }
 
@@ -130,6 +156,7 @@ export default class MovieList {
 
     this._currentSortType = sortType;
     this._clearMovieList({resetRenderedCardCount: true});
+    this._clearExtraBlock();
     this._renderMovieList();
   }
 
@@ -145,7 +172,7 @@ export default class MovieList {
   }
 
   _renderCard(container, card, presentersMap) {
-    const cardPresenter = new Movie(container, this._handleViewAction, this._handleModeChange);
+    const cardPresenter = new Movie(container, this._handleViewAction, this._handleModeChange, this._api);
     cardPresenter.init(card);
     if (presentersMap) {
       presentersMap[card.id] = cardPresenter;
@@ -156,6 +183,10 @@ export default class MovieList {
 
   _renderCards(cards) {
     cards.forEach((card) => this._renderCard(this._filmsListComponent, card));
+  }
+
+  _renderLoading() {
+    render(this._filmListElement, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderNoCards() {
@@ -197,6 +228,7 @@ export default class MovieList {
 
     remove(this._sortComponent);
     remove(this._noCardComponent);
+    remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
 
     if (resetRenderedCardCount) {
@@ -242,6 +274,10 @@ export default class MovieList {
   }
 
   _renderMovieList() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
     const cards = this._getCards();
     const cardCount = cards.length;
     if (cardCount === 0) {

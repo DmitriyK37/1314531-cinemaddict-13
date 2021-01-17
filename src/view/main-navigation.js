@@ -12,12 +12,9 @@ const createMenuTemplate = (filters, currentFilterType) => {
     .map((filter) => createMainNavigationTemplate(filter, currentFilterType))
     .join(``);
 
-  return `<nav class="main-navigation">
-    <div class="main-navigation__items">
+  return `<div class="main-navigation__items">
       ${filterItems}
-    </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
-  </nav>`;
+    </div>`;
 };
 
 export default class SiteMenu extends Abstract {
