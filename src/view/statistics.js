@@ -5,7 +5,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Smart from "./smart";
 import {FilterType} from "../const.js";
 import {filter} from "../utils/filter.js";
-import {TimeFilter} from "../const.js";
+// import {TimeFilter} from "../const.js";
 dayjs.extend(duration);
 
 const BAR_HEIGHT = 50;

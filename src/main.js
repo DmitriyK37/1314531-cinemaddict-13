@@ -70,7 +70,6 @@ api.getMovies()
     cardsModel.setCards(UpdateType.INIT, cards);
     render(siteHeaderElement, new Profile(), RenderPosition.BEFOREEND);
     saitStats.setMenuClickHandler(handleSiteMenuClick);
-    console.log(cards);
   })
   .catch(() => {
     cardsModel.setCards(UpdateType.INIT, []);
