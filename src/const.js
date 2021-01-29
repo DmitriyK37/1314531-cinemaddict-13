@@ -111,8 +111,8 @@ export const SortType = {
 
 export const UserAction = {
   UPDATE_CARD: `UPDATE_CARD`,
-  ADD_CARD: `ADD_CARD`,
-  DELETE_CARD: `DELETE_CARD`
+  ADD_COMMENT: `ADD_CARD`,
+  DELETE_COMMENT: `DELETE_CARD`
 };
 
 export const UpdateType = {
@@ -134,10 +134,10 @@ export const MenuItem = {
   STATISTICS: `STATISTICS`
 };
 
-export const TimeFilter = {
-  ALL_TIME: `all-time`,
-  TODAY: `today`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`
-};
+// export const TimeFilter = {
+//   ALL_TIME: `all-time`,
+//   TODAY: `today`,
+//   WEEK: `week`,
+//   MONTH: `month`,
+//   YEAR: `year`
+// };

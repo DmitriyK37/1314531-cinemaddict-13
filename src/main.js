@@ -15,20 +15,10 @@ import Api from "./api.js";
 const AUTHORIZATION = `Basic jkdgfl98dg9jsdu`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
-// const cards = new Array(CARD).fill().map(generateCard);
-
 const api = new Api(END_POINT, AUTHORIZATION);
 
-// api.getMovies().then((cards) => {
-//   console.log(cards);
-//   // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
-//   // а ещё на сервере используется snake_case, а у нас camelCase.
-//   // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
-//   // Есть вариант получше - паттерн "Адаптер"
-// });
-
 const cardsModel = new CardsModel();
-// cardsModel.setCards(cards);
+
 const filterModel = new FilterModel();
 
 const siteHeaderElement = document.querySelector(`.header`);
@@ -68,7 +58,7 @@ filterPresenter.init();
 api.getMovies()
   .then((cards) => {
     cardsModel.setCards(UpdateType.INIT, cards);
-    render(siteHeaderElement, new Profile(), RenderPosition.BEFOREEND);
+    render(siteHeaderElement, new Profile(cards), RenderPosition.BEFOREEND);
     saitStats.setMenuClickHandler(handleSiteMenuClick);
   })
   .catch(() => {

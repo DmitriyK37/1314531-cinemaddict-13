@@ -3,7 +3,7 @@ import {MenuItem} from "../const.js";
 
 const createStatsTemplate = () => (
   `<nav class="main-navigation">
-    <a href="#stats" class="main-navigation__additional" data-stats-name="stats">Stats</a>
+    <a href="#stats" class="main-navigation__additional ${MenuItem.STATISTICS === true ? `main-navigation__additional--active` : ``}" data-stats-name="stats">Stats</a>
   </nav>`
 );
 
@@ -12,10 +12,15 @@ export default class MenuStatistics extends Abstract {
     super();
 
     this._menuClickHandler = this._menuClickHandler.bind(this);
+    this.setMenuClickHandler();
   }
 
   getTemplate() {
     return createStatsTemplate();
+  }
+
+  restoreHandlers() {
+    this.setMenuClickHandler();
   }
 
   _menuClickHandler(evt) {

@@ -3,19 +3,17 @@ import duration from "dayjs/plugin/duration";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Smart from "./smart";
-import {FilterType} from "../const.js";
-import {filter} from "../utils/filter.js";
-// import {TimeFilter} from "../const.js";
+import {getUserTitle} from "./profile";
+
 dayjs.extend(duration);
 
-const BAR_HEIGHT = 50;
+const BAR_HEIGHT = 100;
 
 export const renderChart = (statisticCtx, uniqGenre, uniqGenreQuantitys) => {
-
+  statisticCtx.height = BAR_HEIGHT * 5;
   const uniqGenreQuantity = uniqGenreQuantitys.sort((a, b) => {
     return (+b) - (+a);
   });
-  // const uniqGenreAll = uniqGenre;
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
@@ -99,7 +97,8 @@ const createTotalDurationMarkup = (cards) => {
   return hours && minutes ? `${hours} ${minutes}` : null;
 };
 
-const createStatsTemplate = (cards, uniqGenre) => {
+const createStatsTemplate = (cards, uniqGenre, activeFilter) => {
+  const rank = getUserTitle(cards.length);
   const topGenre = uniqGenre[0];
   const totalDurationMarkup = createTotalDurationMarkup(cards);
 
@@ -107,32 +106,32 @@ const createStatsTemplate = (cards, uniqGenre) => {
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Sci-Fighter</span>
+      <span class="statistic__rank-label">${rank}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" ${activeFilter === `all-time` ? `checked` : ``}>
       <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today" ${activeFilter === `today` ? `checked` : ``}>
       <label for="statistic-today" class="statistic__filters-label">Today</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week" ${activeFilter === `week` ? `checked` : ``}>
       <label for="statistic-week" class="statistic__filters-label">Week</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month" ${activeFilter === `month` ? `checked` : ``}>
       <label for="statistic-month" class="statistic__filters-label">Month</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year" ${activeFilter === `year` ? `checked` : ``}>
       <label for="statistic-year" class="statistic__filters-label">Year</label>
     </form>
 
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${filter[FilterType.HISTORY](cards).length} <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">${cards.length} <span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
@@ -145,7 +144,7 @@ const createStatsTemplate = (cards, uniqGenre) => {
     </ul>
 
     <div class="statistic__chart-wrap">
-      <canvas class="statistic__chart" width="1000" height="${BAR_HEIGHT * cards.length}"></canvas>
+      <canvas class="statistic__chart" width="1000"></canvas>
     </div>
   </section>`;
 };
@@ -153,36 +152,69 @@ const createStatsTemplate = (cards, uniqGenre) => {
 export default class Statistics extends Smart {
   constructor(cards) {
     super();
-
-    cards = filter[FilterType.HISTORY](cards);
     this._data = cards;
-    this._uniqGenre = Object.keys(createGenres(this._data));
-    this._uniqGenreQuantitys = Object.values(createGenres(this._data));
+    this._test = this._data;
+    this._activeFilter = `all-time`;
+
+    this._formChangehandler = this._formChangehandler.bind(this);
+    this._setFilterClickHandler();
     this._setCharts();
   }
 
-  getTemplate() {
-
-    return createStatsTemplate(this._data, this._uniqGenre);
+  removeElement() {
+    super.removeElement();
+    if (this._genresChart !== null) {
+      this._genresChart = null;
+    }
   }
 
-  // restoreHandlers() {
-  //   this._setCharts();
-  // }
+  getTemplate() {
+    this._uniqGenre = Object.keys(createGenres(this._test));
+    this._uniqGenreQuantitys = Object.values(createGenres(this._test));
+    return createStatsTemplate(this._test, this._uniqGenre, this._activeFilter);
+  }
 
-  // _dateChangeHandler([dateFrom, dateTo]) {
-  //   if (!dateFrom || !dateTo) {
-  //     return;
-  //   }
+  restoreHandlers() {
+    this._setCharts();
+    this._setFilterClickHandler();
+  }
 
-  //   this.updateData({
-  //     dateFrom,
-  //     dateTo
-  //   });
-  // }
+  _formChangehandler(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName === `INPUT`) {
+      this._activeFilter = evt.target.value;
+      switch (this._activeFilter) {
+        case `all-time`:
+          this._test = this._data.filter((item) => dayjs(item.watchDate));
+          break;
+        case `today`:
+          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `day`)));
+          break;
+        case `week`:
+          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `week`)));
+          break;
+        case `month`:
+          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `month`)));
+          break;
+        case `year`:
+          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `year`)));
+          break;
+      }
+      this.updateElement(this._test);
+    }
+  }
+
+  _setFilterClickHandler() {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`change`, this._formChangehandler);
+  }
 
   _setCharts() {
+    if (this._genresChart !== null) {
+      this._genresChart = null;
+    }
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
+
     this._genresChart = renderChart(statisticCtx, this._uniqGenre, this._uniqGenreQuantitys);
   }
 }

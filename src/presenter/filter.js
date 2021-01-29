@@ -51,7 +51,6 @@ export default class Filter {
 
   _getFilters() {
     const cards = this._cardsModel.getCards();
-
     return [
       {
         type: FilterType.ALL,

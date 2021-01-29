@@ -1,4 +1,5 @@
 import Observer from "../utils/observer.js";
+import dayjs from "dayjs";
 
 export default class Cards extends Observer {
   constructor() {
@@ -60,7 +61,6 @@ export default class Cards extends Observer {
         {},
         card,
         {
-          id: card.id,
           title: card.film_info.title,
           rating: card.film_info.total_rating,
           year: new Date(card.film_info.release.date),
@@ -69,15 +69,15 @@ export default class Cards extends Observer {
           poster: card.film_info.poster,
           description: card.film_info.description,
           age: card.film_info.age_rating,
-          // original: card.film_info.alternative_title,
-          // director: card.film_info.director,
-          // writers: card.film_info.writers,
-          // actors: card.film_info.actors,
-          // country: card.film_info.release.release_country,
+          original: card.film_info.alternative_title,
+          director: card.film_info.director,
+          writers: card.film_info.writers,
+          actors: card.film_info.actors,
+          country: card.film_info.release.release_country,
           toWatch: card.user_details.watchlist,
           hasWatched: card.user_details.already_watched,
           isFavorites: card.user_details.favorite,
-          // watchDate: new Date(card.user_details.watching_date)
+          watchDate: new Date(card.user_details.watching_date)
         }
     );
 
@@ -90,37 +90,54 @@ export default class Cards extends Observer {
         card,
         {
           "film_info": {
-            // "actors": card.actors,
+            "actors": card.actors,
             "age_rating": card.age,
             "title": card.title,
-            // "alternative_title": card.title,
+            "alternative_title": card.original,
             "description": card.description,
-            // "director": card.director,
+            "director": card.director,
             "genre": card.genre,
             "poster": card.poster,
 
             "release": {
-              "date": card.year.toISOString(),
-              // "release_country": card.country
+              "date": dayjs(card.year).format(),
+              "release_country": card.country
             },
 
             "runtime": card.duration,
             "total_rating": card.rating,
-            // "writers": card.writers
+            "writers": card.writers
           },
-
-          "id": card.id,
 
           "user_details": {
             "watchlist": card.toWatch,
             "already_watched": card.hasWatched,
             "favorite": card.isFavorites,
-            // "watching_date": card.hasWatched ?
-            //   card.watchDate : null,
+            "watching_date": card.hasWatched ?
+              card.watchDate : null,
           }
         }
     );
 
+    delete adaptedCard.age;
+    delete adaptedCard.title;
+    delete adaptedCard.description;
+    delete adaptedCard.genre;
+    delete adaptedCard.poster;
+    delete adaptedCard.duration;
+    delete adaptedCard.rating;
+    delete adaptedCard.country;
+    delete adaptedCard.writers;
+    delete adaptedCard.director;
+    delete adaptedCard.actors;
+    delete adaptedCard.original;
+    delete adaptedCard.year;
+    delete adaptedCard.toWatch;
+    delete adaptedCard.hasWatched;
+    delete adaptedCard.isFavorites;
+    delete adaptedCard.watchDate;
+
     return adaptedCard;
   }
 }
+
