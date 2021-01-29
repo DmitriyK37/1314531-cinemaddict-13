@@ -1,22 +1,22 @@
 import Abstract from "./abstract.js";
 import {MenuItem} from "../const.js";
 
-const createStatsTemplate = () => (
+const createStatsTemplate = (activFilter) => (
   `<nav class="main-navigation">
-    <a href="#stats" class="main-navigation__additional ${MenuItem.STATISTICS === true ? `main-navigation__additional--active` : ``}" data-stats-name="stats">Stats</a>
+    <a href="#stats" class="main-navigation__additional ${MenuItem.STATISTICS === activFilter ? `main-navigation__additional--active` : ``}" data-stats-name="stats">Stats</a>
   </nav>`
 );
 
 export default class MenuStatistics extends Abstract {
-  constructor() {
+  constructor(activFilter) {
     super();
-
+    this._activFilter = activFilter;
     this._menuClickHandler = this._menuClickHandler.bind(this);
     this.setMenuClickHandler();
   }
 
   getTemplate() {
-    return createStatsTemplate();
+    return createStatsTemplate(this._activFilter);
   }
 
   restoreHandlers() {

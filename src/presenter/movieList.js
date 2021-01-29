@@ -18,6 +18,7 @@ import CardsModel from "../model/movies.js";
 const CARD_STEP = 5;
 const TOP_RATED_CARD = 2;
 const MOST_COMMENTED_CARD = 2;
+// const siteHeaderElement = document.querySelector(`.header`);
 
 export default class MovieList {
   constructor(filmListElement, cardsModel, filterModel, api) {
@@ -35,10 +36,9 @@ export default class MovieList {
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
 
-
+    this._siteHeaderElement = document.querySelector(`.header`);
     this._filmsComponent = new Films();
     this._sortComponent = new Sort();
-    this._porfileComponent = new Profile();
     this._filmBoardComponent = new FilmBoard();
     this._filmsListComponent = new FilmsList();
     this._noCardComponent = new NoCards();
@@ -138,7 +138,6 @@ export default class MovieList {
         this._clearExtraBlock();
         this._renderTopRateList();
         this._renderMostCommentedList();
-        this._renderProfile();
         break;
       case UpdateType.MAJOR:
         this._clearMovieList({resetRenderedCardCount: true, resetSortType: true});
@@ -151,9 +150,6 @@ export default class MovieList {
         this._isLoading = false;
         remove(this._loadingComponent);
         this._renderMovieList();
-        // this._clearExtraBlock();
-        // this._renderTopRateList();
-        // this._renderMostCommentedList();
         break;
     }
   }
@@ -194,8 +190,13 @@ export default class MovieList {
     cards.forEach((card) => this._renderCard(this._filmsListComponent, card));
   }
 
-  _renderProfile() {
-    this._porfileComponent = new Profile(this._cardsModel);
+  _renderProfile(cards) {
+    this._profileComponent = new Profile(cards);
+    render(this._siteHeaderElement, this._profileComponent, RenderPosition.BEFOREEND);
+  }
+
+  _removeProfile() {
+    remove(this._profileComponent);
   }
 
   _renderLoading() {
@@ -238,7 +239,7 @@ export default class MovieList {
       .values(this._cardPresenter)
       .forEach((presenter) => presenter.destroy());
     this._cardPresenter = {};
-
+    remove(this._profileComponent);
     remove(this._sortComponent);
     remove(this._noCardComponent);
     remove(this._loadingComponent);
@@ -305,6 +306,7 @@ export default class MovieList {
     }
     this._renderSort();
     this._renderCards(cards.slice(0, Math.min(cardCount, this._renderedCardCount)));
+    this._renderProfile(cards);
     this._renderTopRateList();
     this._renderMostCommentedList();
 

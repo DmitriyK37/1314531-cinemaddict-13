@@ -35,7 +35,7 @@ export default class SiteMenu extends Abstract {
       evt.preventDefault();
       this._callback.filterTypeChange(evt.target.dataset.filterName);
     }
-    // Здесь  проверять
+
   }
 
   setFilterTypeChangeHandler(callback) {

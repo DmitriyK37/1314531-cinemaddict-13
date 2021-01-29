@@ -32,6 +32,7 @@ const createProfileTemplate = (cards) => {
       hasWatched.push(cardGenre[i]);
     }
   }
+
   const title = getUserTitle(hasWatched);
   return (
     `<section class="header__profile profile">
