@@ -15,12 +15,10 @@ import {SortType, UpdateType, UserAction} from "../const.js";
 import Loading from "../view/loading.js";
 import CardsModel from "../model/movies.js";
 import Statistics from "../view/statistics.js";
-import SiteMenu from "../view/main-navigation.js";
 
 const CARD_STEP = 5;
 const TOP_RATED_CARD = 2;
 const MOST_COMMENTED_CARD = 2;
-// const siteHeaderElement = document.querySelector(`.header`);
 
 export default class MovieList {
   constructor(filmListElement, cardsModel, filterModel, api) {
@@ -37,6 +35,7 @@ export default class MovieList {
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
+    this._statisticComponent = null;
 
     this._siteHeaderElement = document.querySelector(`.header`);
     this._filmsComponent = new Films();
@@ -48,7 +47,6 @@ export default class MovieList {
     this._topRatedFilmsComponent = new TopRatedFilms();
     this._mostCommentedFilmsComponent = new MostCommentedFilms();
     this._loadingComponent = new Loading();
-    this._statisticComponent = new SiteMenu();
 
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -84,10 +82,6 @@ export default class MovieList {
   _getCards() {
     const filterType = this._filterModel.getFilter();
     const cards = this._cardsModel.getCards();
-    if (filterType === `STATS`) {
-      remove(this._filmsComponent);
-      this._renderStatistic(cards);
-    }
     const filtredCards = filter[filterType](cards);
     switch (this._currentSortType) {
       case SortType.DATE:
@@ -151,6 +145,7 @@ export default class MovieList {
         this._clearExtraBlock();
         this._renderTopRateList();
         this._renderMostCommentedList();
+
         break;
       case UpdateType.INIT:
         this._isLoading = false;
@@ -205,6 +200,15 @@ export default class MovieList {
     const siteMainElement = document.querySelector(`.main`);
     this._statisticComponent = new Statistics(cards);
     render(siteMainElement, this._statisticComponent, RenderPosition.BEFOREEND);
+  }
+
+  _openStats() {
+    const filterType = this._filterModel.getFilter();
+    const cards = this._cardsModel.getCards();
+    if (filterType === `STATS`) {
+      remove(this._filmsComponent);
+      this._renderStatistic(cards);
+    }
   }
 
   _removeStatistic() {
@@ -264,6 +268,7 @@ export default class MovieList {
     remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
     this._removeStatistic();
+
 
     if (resetRenderedCardCount) {
       this._renderedCardCount = CARD_STEP;
@@ -327,9 +332,10 @@ export default class MovieList {
 
     this._renderSort();
     this._renderCards(cards.slice(0, Math.min(cardCount, this._renderedCardCount)));
-    this._renderProfile(cards);
+    this._renderProfile(this._cardsModel.getCards());
     this._renderTopRateList();
     this._renderMostCommentedList();
+    this._openStats();
 
     if (cardCount > this._renderedCardCount) {
       this._renderShowMoreButton();

@@ -98,7 +98,7 @@ const createTotalDurationMarkup = (cards) => {
 };
 
 const createStatsTemplate = (cards, uniqGenre, activeFilter) => {
-  const rank = getUserTitle(cards.length);
+  const rank = getUserTitle(cards);
   const topGenre = uniqGenre[0];
   const totalDurationMarkup = createTotalDurationMarkup(cards);
 
