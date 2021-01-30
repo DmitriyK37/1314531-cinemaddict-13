@@ -153,7 +153,7 @@ export default class Statistics extends Smart {
   constructor(cards) {
     super();
     this._data = cards;
-    this._test = this._data;
+    this._statisticDate = this._data;
     this._activeFilter = `all-time`;
 
     this._formChangehandler = this._formChangehandler.bind(this);
@@ -169,9 +169,9 @@ export default class Statistics extends Smart {
   }
 
   getTemplate() {
-    this._uniqGenre = Object.keys(createGenres(this._test));
-    this._uniqGenreQuantitys = Object.values(createGenres(this._test));
-    return createStatsTemplate(this._test, this._uniqGenre, this._activeFilter);
+    this._uniqGenre = Object.keys(createGenres(this._statisticDate));
+    this._uniqGenreQuantitys = Object.values(createGenres(this._statisticDate));
+    return createStatsTemplate(this._statisticDate, this._uniqGenre, this._activeFilter);
   }
 
   restoreHandlers() {
@@ -185,22 +185,22 @@ export default class Statistics extends Smart {
       this._activeFilter = evt.target.value;
       switch (this._activeFilter) {
         case `all-time`:
-          this._test = this._data.filter((item) => dayjs(item.watchDate));
+          this._statisticDate = this._data.filter((item) => dayjs(item.watchDate));
           break;
         case `today`:
-          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `day`)));
+          this._statisticDate = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `day`)));
           break;
         case `week`:
-          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `week`)));
+          this._statisticDate = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `week`)));
           break;
         case `month`:
-          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `month`)));
+          this._statisticDate = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `month`)));
           break;
         case `year`:
-          this._test = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `year`)));
+          this._statisticDate = this._data.filter((item) => dayjs(item.watchDate).isAfter(dayjs().add(-1, `year`)));
           break;
       }
-      this.updateElement(this._test);
+      this.updateElement(this._statisticDate);
     }
   }
 

@@ -22,7 +22,7 @@ const filterPresenter = new Filter(siteMainElement, filterModel, cardsModel, api
 const listPresenter = new MovieList(siteMainElement, cardsModel, filterModel, api);
 
 const footerStatistic = document.querySelector(`.footer__statistics`);
-render(footerStatistic, new QuantityFilm(), RenderPosition.BEFOREEND);
+
 
 listPresenter.init();
 filterPresenter.init();
@@ -30,6 +30,7 @@ filterPresenter.init();
 api.getMovies()
   .then((cards) => {
     cardsModel.setCards(UpdateType.INIT, cards);
+    render(footerStatistic, new QuantityFilm(cards.length), RenderPosition.BEFOREEND);
   })
   .catch(() => {
     cardsModel.setCards(UpdateType.INIT, []);
