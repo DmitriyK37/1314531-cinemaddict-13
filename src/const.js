@@ -126,13 +126,14 @@ export const FilterType = {
   ALL: `All`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
-  FAVORITES: `favorites`
+  FAVORITES: `favorites`,
+  STATS: `STATS`
 };
 
-export const MenuItem = {
-  FILTER: `FILTER`,
-  STATISTICS: `STATISTICS`
-};
+// export const MenuItem = {
+//   FILTER: `FILTER`,
+//   STATISTICS: `STATISTICS`
+// };
 
 // export const TimeFilter = {
 //   ALL_TIME: `all-time`,

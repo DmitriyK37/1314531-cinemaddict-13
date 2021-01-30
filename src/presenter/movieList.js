@@ -14,6 +14,8 @@ import {filter} from "../utils/filter.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 import Loading from "../view/loading.js";
 import CardsModel from "../model/movies.js";
+import Statistics from "../view/statistics.js";
+import SiteMenu from "../view/main-navigation.js";
 
 const CARD_STEP = 5;
 const TOP_RATED_CARD = 2;
@@ -46,6 +48,7 @@ export default class MovieList {
     this._topRatedFilmsComponent = new TopRatedFilms();
     this._mostCommentedFilmsComponent = new MostCommentedFilms();
     this._loadingComponent = new Loading();
+    this._statisticComponent = new SiteMenu();
 
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -81,15 +84,18 @@ export default class MovieList {
   _getCards() {
     const filterType = this._filterModel.getFilter();
     const cards = this._cardsModel.getCards();
+    if (filterType === `STATS`) {
+      remove(this._filmsComponent);
+      this._renderStatistic(cards);
+    }
     const filtredCards = filter[filterType](cards);
-
     switch (this._currentSortType) {
       case SortType.DATE:
         return filtredCards.sort(sortCardDate);
       case SortType.RATING:
         return filtredCards.sort(sortCardRate);
     }
-    return filtredCards;
+    return (filtredCards);
   }
 
   _handleModeChange() {
@@ -195,6 +201,19 @@ export default class MovieList {
     render(this._siteHeaderElement, this._profileComponent, RenderPosition.BEFOREEND);
   }
 
+  _renderStatistic(cards) {
+    const siteMainElement = document.querySelector(`.main`);
+    this._statisticComponent = new Statistics(cards);
+    render(siteMainElement, this._statisticComponent, RenderPosition.BEFOREEND);
+  }
+
+  _removeStatistic() {
+    remove(this._statisticComponent);
+    render(this._filmListElement, this._filmsComponent, RenderPosition.BEFOREEND);
+    render(this._filmsComponent, this._filmBoardComponent, RenderPosition.BEFOREEND);
+    render(this._filmBoardComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
+  }
+
   _removeProfile() {
     remove(this._profileComponent);
   }
@@ -244,6 +263,7 @@ export default class MovieList {
     remove(this._noCardComponent);
     remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
+    this._removeStatistic();
 
     if (resetRenderedCardCount) {
       this._renderedCardCount = CARD_STEP;
@@ -304,6 +324,7 @@ export default class MovieList {
       this._renderMostCommentedList();
       return;
     }
+
     this._renderSort();
     this._renderCards(cards.slice(0, Math.min(cardCount, this._renderedCardCount)));
     this._renderProfile(cards);

@@ -71,6 +71,10 @@ export default class Filter {
         type: FilterType.FAVORITES,
         name: `favorites`,
         count: filter[FilterType.FAVORITES](cards).length
+      },
+      {
+        type: FilterType.STATS,
+        name: `Stats`,
       }
     ];
   }
