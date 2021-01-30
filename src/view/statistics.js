@@ -92,7 +92,7 @@ const createTotalDurationMarkup = (cards) => {
   }, 0);
 
   const hours = totalDuration >= 60 ? `${Math.trunc(totalDuration / 60)} <span class="statistic__item-description">h</span>` : ``;
-  const minutes = (totalDuration % 60) > 0 ? `${totalDuration % 60} <span class="statistic__item-description">m</span>` : ``;
+  const minutes = (totalDuration % 60) >= 0 ? `${totalDuration % 60} <span class="statistic__item-description">m</span>` : ``;
 
   return hours && minutes ? `${hours} ${minutes}` : null;
 };
