@@ -90,14 +90,14 @@ export default class Movie {
         body.classList.remove(`hide-overflow`);
       });
 
-      // if (prevPopupComponent === null) {
-      //   render(this._filmsListComponent, this._cardComponent, RenderPosition.BEFOREEND);
-      //   return;
-      // }
+      if (prevPopupComponent === null) {
+        render(this._cardComponent, this._popupComponent, RenderPosition.BEFOREEND);
+        return;
+      }
 
-      // if (this._filmsListComponent.getElement().contains(prevPopupComponent.getElement())) {
-      //   replace(this._cardComponent, prevCardComponent);
-      // }
+      if (this._filmsListComponent.getElement().contains(prevPopupComponent.getElement())) {
+        replace(this._cardComponent, prevCardComponent);
+      }
     };
 
     this.closePopup = () => {
