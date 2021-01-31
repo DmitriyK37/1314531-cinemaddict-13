@@ -27,6 +27,7 @@ export default class Movie {
   init(card) {
     this._card = card;
     const prevCardComponent = this._cardComponent;
+
     const body = document.querySelector(`body`);
     this._cardComponent = new FilmCard(card);
 
@@ -37,6 +38,7 @@ export default class Movie {
 
     const openPopup = () => {
       this._changeMode();
+      const prevPopupComponent = this._popupComponent;
       this._popupComponent = new Popup(card, this._api);
       this._api.getComments(card).then((comments) => {
         this._popupComponent.setComments(comments);
@@ -47,7 +49,6 @@ export default class Movie {
       this._popupComponent.setWatchlistClickHandler(this._handleWatchlistClick);
       this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
       this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-
       this._popupComponent.setNewCommentAddHandler((userComment, cardId) => {
         this._api.addComment(userComment, cardId).then((response) => {
           this._popupComponent.addComments(response.comments, response.movie.comments);
@@ -68,7 +69,7 @@ export default class Movie {
         this._api.deleteComment(commentId).then(() => {
           this._popupComponent.setDeleteComment(commentId);
           this._changeData(
-              UserAction.DELETE_COMMENT,
+              UserAction.UPDATE_CARD,
               UpdateType.MINOR,
               Object.assign(
                   {},
@@ -88,6 +89,15 @@ export default class Movie {
         this.closePopup();
         body.classList.remove(`hide-overflow`);
       });
+
+      // if (prevPopupComponent === null) {
+      //   render(this._filmsListComponent, this._cardComponent, RenderPosition.BEFOREEND);
+      //   return;
+      // }
+
+      // if (this._filmsListComponent.getElement().contains(prevPopupComponent.getElement())) {
+      //   replace(this._cardComponent, prevCardComponent);
+      // }
     };
 
     this.closePopup = () => {

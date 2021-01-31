@@ -3,8 +3,12 @@ import he from "he";
 import {emojiesALL} from "../const";
 import Smart from "./smart";
 
-const generateGenresTemplate = (genre) => {
-  return `<span class="film-details__genre">${genre.join(`, `)}</span>`;
+const generateGenresTemplate = (genres) => {
+  return genres
+    .map((genre) => {
+      return `<span class="film-details__genre">${genre}</span>`;
+    })
+    .join(``);
 };
 
 const renderCommentsDate = (day) => {
@@ -54,7 +58,7 @@ const createPopup = (card, comments) => {
     year,
     duration,
     poster,
-    genre,
+    genres,
     description,
     age,
     toWatch,
@@ -66,7 +70,7 @@ const createPopup = (card, comments) => {
     deletingComment
   } = card;
 
-  const actualGenres = generateGenresTemplate(genre);
+  const actualGenres = generateGenresTemplate(genres);
   const date = dayjs(year).format(`D MMMM YYYY`);
   const emojiesListTemplate = createEmojiesTemplate(emojiesALL, emojies, isDisabled);
 
@@ -277,7 +281,7 @@ export default class Popup extends Smart {
   }
 
   _newCommentAddHandler(evt) {
-    if (evt.ctrlKey && evt.key === `Enter`) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === `Enter`) {
       if (this.getElement().querySelector(`textarea`).value !== `` && this._data.emojies !== null) {
         const userComment = {
           comment: this.getElement().querySelector(`textarea`).value,

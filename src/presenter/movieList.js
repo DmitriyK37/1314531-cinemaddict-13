@@ -111,10 +111,6 @@ export default class MovieList {
         break;
       case UserAction.ADD_COMMENT:
         this._cardsModel.updateCard(updateType, CardsModel.adaptToClient(update));
-
-        break;
-      case UserAction.DELETE_COMMENT:
-        this._cardsModel.updateCard(updateType, CardsModel.adaptToClient(update));
         break;
     }
   }
@@ -131,6 +127,7 @@ export default class MovieList {
         if (this._mostCommentedCardPresenter[data.id]) {
           this._mostCommentedCardPresenter[data.id].init(data);
         }
+
         break;
       case UpdateType.MINOR:
         this._clearMovieList();

@@ -65,7 +65,7 @@ export default class Cards extends Observer {
           rating: card.film_info.total_rating,
           year: new Date(card.film_info.release.date),
           duration: card.film_info.runtime,
-          genre: card.film_info.genre,
+          genres: card.film_info.genre,
           poster: card.film_info.poster,
           description: card.film_info.description,
           age: card.film_info.age_rating,
@@ -80,6 +80,9 @@ export default class Cards extends Observer {
           watchDate: new Date(card.user_details.watching_date)
         }
     );
+
+    delete adaptedCard.film_info;
+    delete adaptedCard.user_details;
 
     return adaptedCard;
   }
@@ -96,7 +99,7 @@ export default class Cards extends Observer {
             "alternative_title": card.original,
             "description": card.description,
             "director": card.director,
-            "genre": card.genre,
+            "genre": card.genres,
             "poster": card.poster,
 
             "release": {
@@ -122,7 +125,7 @@ export default class Cards extends Observer {
     delete adaptedCard.age;
     delete adaptedCard.title;
     delete adaptedCard.description;
-    delete adaptedCard.genre;
+    delete adaptedCard.genres;
     delete adaptedCard.poster;
     delete adaptedCard.duration;
     delete adaptedCard.rating;

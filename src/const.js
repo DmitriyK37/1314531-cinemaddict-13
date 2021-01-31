@@ -15,7 +15,6 @@ export const SortType = {
 export const UserAction = {
   UPDATE_CARD: `UPDATE_CARD`,
   ADD_COMMENT: `ADD_CARD`,
-  DELETE_COMMENT: `DELETE_CARD`
 };
 
 export const UpdateType = {
