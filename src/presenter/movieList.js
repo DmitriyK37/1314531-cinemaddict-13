@@ -127,7 +127,6 @@ export default class MovieList {
         if (this._mostCommentedCardPresenter[data.id]) {
           this._mostCommentedCardPresenter[data.id].init(data);
         }
-
         break;
       case UpdateType.MINOR:
         this._clearMovieList();

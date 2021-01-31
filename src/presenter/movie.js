@@ -19,36 +19,42 @@ export default class Movie {
     this._popupComponent = null;
 
     this.setViewState = this._setViewState.bind(this);
-    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
-    this._handleWatchedClick = this._handleWatchedClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleWatchlistPopupClick = this._handleWatchlistPopupClick.bind(this);
+    this._handleWatchedPopupClick = this._handleWatchedPopupClick.bind(this);
+    this._handleFavoritePopupClick = this._handleFavoritePopupClick.bind(this);
+    this._handleWatchlistCardClick = this._handleWatchlistCardClick.bind(this);
+    this._handleWatchedCardsClick = this._handleWatchedCardsClick.bind(this);
+    this._handleFavoriteCardsClick = this._handleFavoriteCardsClick.bind(this);
   }
 
   init(card) {
     this._card = card;
     const prevCardComponent = this._cardComponent;
+    const prevPopupComponent = this._popupComponent;
 
     const body = document.querySelector(`body`);
     this._cardComponent = new FilmCard(card);
 
 
-    this._cardComponent.setWatchlistClickHandler(this._handleWatchlistClick);
-    this._cardComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._cardComponent.setWatchlistCardsClickHandler(this._handleWatchlistCardClick);
+    this._cardComponent.setWatchedCardsClickHandler(this._handleWatchedCardsClick);
+    this._cardComponent.setFavoriteCardsClickHandler(this._handleFavoriteCardsClick);
 
     const openPopup = () => {
       this._changeMode();
-      const prevPopupComponent = this._popupComponent;
       this._popupComponent = new Popup(card, this._api);
       this._api.getComments(card).then((comments) => {
         this._popupComponent.setComments(comments);
       });
+
       body.appendChild(this._popupComponent.getElement());
       document.addEventListener(`keydown`, onEscKeyDown);
 
-      this._popupComponent.setWatchlistClickHandler(this._handleWatchlistClick);
-      this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
-      this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+      remove(prevPopupComponent);
+      this._popupComponent.setWatchlistPopupClickHandler(this._handleWatchlistPopupClick);
+      this._popupComponent.setWatchedPopupClickHandler(this._handleWatchedPopupClick);
+      this._popupComponent.setFavoritePopupClickHandler(this._handleFavoritePopupClick);
+
       this._popupComponent.setNewCommentAddHandler((userComment, cardId) => {
         this._api.addComment(userComment, cardId).then((response) => {
           this._popupComponent.addComments(response.comments, response.movie.comments);
@@ -89,15 +95,6 @@ export default class Movie {
         this.closePopup();
         body.classList.remove(`hide-overflow`);
       });
-
-      if (prevPopupComponent === null) {
-        render(this._cardComponent, this._popupComponent, RenderPosition.BEFOREEND);
-        return;
-      }
-
-      if (this._filmsListComponent.getElement().contains(prevPopupComponent.getElement())) {
-        replace(this._cardComponent, prevCardComponent);
-      }
     };
 
     this.closePopup = () => {
@@ -167,7 +164,7 @@ export default class Movie {
     this.closePopup();
   }
 
-  _handleWatchlistClick() {
+  _handleWatchlistCardClick() {
     this._changeData(
         UserAction.UPDATE_CARD,
         UpdateType.MINOR,
@@ -181,7 +178,7 @@ export default class Movie {
     );
   }
 
-  _handleWatchedClick() {
+  _handleWatchedCardsClick() {
     this._changeData(
         UserAction.UPDATE_CARD,
         UpdateType.MINOR,
@@ -195,10 +192,52 @@ export default class Movie {
     );
   }
 
-  _handleFavoriteClick() {
+  _handleFavoriteCardsClick() {
     this._changeData(
         UserAction.UPDATE_CARD,
         UpdateType.MINOR,
+        Object.assign(
+            {},
+            this._card,
+            {
+              isFavorites: !this._card.isFavorites
+            }
+        )
+    );
+  }
+
+  _handleWatchlistPopupClick() {
+    this._changeData(
+        UserAction.UPDATE_CARD,
+        UpdateType.PATCH,
+        Object.assign(
+            {},
+            this._card,
+            {
+              toWatch: !this._card.toWatch
+            }
+        )
+    );
+  }
+
+  _handleWatchedPopupClick() {
+    this._changeData(
+        UserAction.UPDATE_CARD,
+        UpdateType.PATCH,
+        Object.assign(
+            {},
+            this._card,
+            {
+              hasWatched: !this._card.hasWatched
+            }
+        )
+    );
+  }
+
+  _handleFavoritePopupClick() {
+    this._changeData(
+        UserAction.UPDATE_CARD,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._card,

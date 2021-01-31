@@ -208,9 +208,9 @@ export default class Popup extends Smart {
   restoreHandlers() {
     this._setInnerHandlers();
     this.setPopupClickHandler(this._callback.popupClick);
-    this.setWatchlistClickHandler(this._callback.watchlistClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchlistPopupClickHandler(this._callback.watchlistClick);
+    this.setWatchedPopupClickHandler(this._callback.watchedClick);
+    this.setFavoritePopupClickHandler(this._callback.favoriteClick);
     this.setDeletCommentClickHandler(this._callback.deleteCommentClick);
   }
 
@@ -303,17 +303,17 @@ export default class Popup extends Smart {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._popupClickHandler);
   }
 
-  setWatchlistClickHandler(callback) {
+  setWatchlistPopupClickHandler(callback) {
     this._callback.watchlistClick = callback;
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._watchlistClickHandler);
   }
 
-  setWatchedClickHandler(callback) {
+  setWatchedPopupClickHandler(callback) {
     this._callback.watchedClick = callback;
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._watchedClickHandler);
   }
 
-  setFavoriteClickHandler(callback) {
+  setFavoritePopupClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
   }
