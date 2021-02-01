@@ -102,6 +102,16 @@ export default class Movie {
         body.removeChild(this._popupComponent.getElement());
         this._popupComponent = null;
         document.removeEventListener(`keydown`, onEscKeyDown);
+        this._changeData(
+            UserAction.UPDATE_CARD,
+            UpdateType.MINOR,
+            Object.assign(
+                {},
+                this._card,
+                {
+                }
+            )
+        );
       }
     };
 

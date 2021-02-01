@@ -74,7 +74,7 @@ export const renderChart = (statisticCtx, uniqGenre, uniqGenreQuantitys) => {
 };
 
 const createGenres = (cards) => {
-  const cardGenre = cards.map((card) => card.genre);
+  const cardGenre = cards.map((card) => card.genres);
   const cardGenres = cardGenre.reduce((a, b) => a.concat(b), []);
   return cardGenres.reduce((acc, item) => {
     if (acc.hasOwnProperty(item)) {
@@ -94,7 +94,7 @@ const createTotalDurationMarkup = (cards) => {
   const hours = totalDuration >= 60 ? `${Math.trunc(totalDuration / 60)} <span class="statistic__item-description">h</span>` : ``;
   const minutes = (totalDuration % 60) >= 0 ? `${totalDuration % 60} <span class="statistic__item-description">m</span>` : ``;
 
-  return hours && minutes ? `${hours} ${minutes}` : null;
+  return hours && minutes ? `${hours} ${minutes}` : `0 hours 0 minutes`;
 };
 
 const createStatsTemplate = (cards, uniqGenre, activeFilter) => {
@@ -139,7 +139,7 @@ const createStatsTemplate = (cards, uniqGenre, activeFilter) => {
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${topGenre}</p>
+        <p class="statistic__item-text">${topGenre !== undefined ? topGenre : `No genres`}</p>
       </li>
     </ul>
 

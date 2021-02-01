@@ -223,6 +223,7 @@ export default class MovieList {
   }
 
   _renderNoCards() {
+    this._renderProfile(this._cardsModel.getCards());
     render(this._filmsListComponent, this._noCardComponent, RenderPosition.BEFOREEND);
   }
 
