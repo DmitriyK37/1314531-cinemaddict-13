@@ -60,7 +60,7 @@ export default class Movie {
           this._popupComponent.addComments(response.comments, response.movie.comments);
           this._changeData(
               UserAction.ADD_COMMENT,
-              UpdateType.MINOR,
+              UpdateType.PATCH,
               response.movie
           );
         }
@@ -76,7 +76,7 @@ export default class Movie {
           this._popupComponent.setDeleteComment(commentId);
           this._changeData(
               UserAction.UPDATE_CARD,
-              UpdateType.MINOR,
+              UpdateType.PATCH,
               Object.assign(
                   {},
                   this._card,

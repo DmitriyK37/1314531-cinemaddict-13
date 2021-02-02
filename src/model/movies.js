@@ -116,8 +116,7 @@ export default class Cards extends Observer {
             "watchlist": card.toWatch,
             "already_watched": card.hasWatched,
             "favorite": card.isFavorites,
-            "watching_date": card.hasWatched ?
-              card.watchDate : null,
+            "watching_date": card.hasWatched ? card.watchDate = new Date() : null,
           }
         }
     );
